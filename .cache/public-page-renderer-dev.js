@@ -2,11 +2,11 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import loader from "./loader"
-import { PageQueryStore } from "./query-result-store"
+import JSONStore from "./json-store"
 
 const DevPageRenderer = ({ location }) => {
   const pageResources = loader.loadPageSync(location.pathname)
-  return React.createElement(PageQueryStore, {
+  return React.createElement(JSONStore, {
     location,
     pageResources,
   })

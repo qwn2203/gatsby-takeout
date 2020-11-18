@@ -16,15 +16,13 @@ var _gatsbyReactRouterScroll = require("gatsby-react-router-scroll");
 
 var _domready = _interopRequireDefault(require("@mikaelkristiansson/domready"));
 
-var _gatsby = require("gatsby");
-
 var _navigation = require("./navigation");
 
 var _emitter = _interopRequireDefault(require("./emitter"));
 
 var _pageRenderer = _interopRequireDefault(require("./page-renderer"));
 
-var _asyncRequires = _interopRequireDefault(require("$virtual/async-requires"));
+var _asyncRequires = _interopRequireDefault(require("./async-requires"));
 
 var _loader = require("./loader");
 
@@ -32,7 +30,7 @@ var _ensureResources = _interopRequireDefault(require("./ensure-resources"));
 
 var _stripPrefix = _interopRequireDefault(require("./strip-prefix"));
 
-var _matchPaths = _interopRequireDefault(require("$virtual/match-paths.json"));
+var _matchPaths = _interopRequireDefault(require("./match-paths.json"));
 
 // Generated during bootstrap
 const loader = new _loader.ProdLoader(_asyncRequires.default, _matchPaths.default);
@@ -41,6 +39,7 @@ loader.setApiRunner(_apiRunnerBrowser.apiRunner);
 window.asyncRequires = _asyncRequires.default;
 window.___emitter = _emitter.default;
 window.___loader = _loader.publicLoader;
+window.___webpackCompilationHash = window.webpackCompilationHash;
 (0, _navigation.init)();
 (0, _apiRunnerBrowser.apiRunnerAsync)(`onClientEntry`).then(() => {
   // Let plugins register a service worker. The plugin just needs
@@ -57,58 +56,34 @@ window.___loader = _loader.publicLoader;
   // Remove this in v3
 
 
-  const RouteHandler = props => /*#__PURE__*/_react.default.createElement(_router.BaseContext.Provider, {
+  const RouteHandler = props => _react.default.createElement(_router.BaseContext.Provider, {
     value: {
       baseuri: `/`,
       basepath: `/`
     }
-  }, /*#__PURE__*/_react.default.createElement(_pageRenderer.default, props));
+  }, _react.default.createElement(_pageRenderer.default, props));
 
-  const DataContext = /*#__PURE__*/_react.default.createContext({});
-
-  class GatsbyRoot extends _react.default.Component {
+  class LocationHandler extends _react.default.Component {
     render() {
       const {
-        children
-      } = this.props;
-      return /*#__PURE__*/_react.default.createElement(_router.Location, null, ({
         location
-      }) => /*#__PURE__*/_react.default.createElement(_ensureResources.default, {
+      } = this.props;
+      return _react.default.createElement(_ensureResources.default, {
         location: location
       }, ({
         pageResources,
         location
-      }) => {
-        const staticQueryResults = (0, _loader.getStaticQueryResults)();
-        return /*#__PURE__*/_react.default.createElement(_gatsby.StaticQueryContext.Provider, {
-          value: staticQueryResults
-        }, /*#__PURE__*/_react.default.createElement(DataContext.Provider, {
-          value: {
-            pageResources,
-            location
-          }
-        }, children));
-      }));
-    }
-
-  }
-
-  class LocationHandler extends _react.default.Component {
-    render() {
-      return /*#__PURE__*/_react.default.createElement(DataContext.Consumer, null, ({
-        pageResources,
-        location
-      }) => /*#__PURE__*/_react.default.createElement(_navigation.RouteUpdates, {
+      }) => _react.default.createElement(_navigation.RouteUpdates, {
         location: location
-      }, /*#__PURE__*/_react.default.createElement(_gatsbyReactRouterScroll.ScrollContext, {
+      }, _react.default.createElement(_gatsbyReactRouterScroll.ScrollContext, {
         location: location,
         shouldUpdateScroll: _navigation.shouldUpdateScroll
-      }, /*#__PURE__*/_react.default.createElement(_router.Router, {
+      }, _react.default.createElement(_router.Router, {
         basepath: __BASE_PATH__,
         location: location,
         id: "gatsby-focus-wrapper"
-      }, /*#__PURE__*/_react.default.createElement(RouteHandler, (0, _extends2.default)({
-        path: pageResources.page.path === `/404.html` ? (0, _stripPrefix.default)(location.pathname, __BASE_PATH__) : encodeURI(pageResources.page.matchPath || pageResources.page.path)
+      }, _react.default.createElement(RouteHandler, (0, _extends2.default)({
+        path: encodeURI(pageResources.page.path === `/404.html` ? (0, _stripPrefix.default)(location.pathname, __BASE_PATH__) : pageResources.page.matchPath || pageResources.page.path)
       }, this.props, {
         location: location,
         pageResources: pageResources
@@ -134,15 +109,16 @@ window.___loader = _loader.publicLoader;
     });
   }
 
-  _loader.publicLoader.loadPage(browserLoc.pathname).then(page => {
-    if (!page || page.status === _loader.PageResourceStatus.Error) {
+  loader.loadPage(browserLoc.pathname).then(page => {
+    if (!page || page.status === `error`) {
       throw new Error(`page resources for ${browserLoc.pathname} not found. Not rendering React`);
     }
 
-    window.___webpackCompilationHash = page.page.webpackCompilationHash;
-    const SiteRoot = (0, _apiRunnerBrowser.apiRunner)(`wrapRootElement`, {
-      element: /*#__PURE__*/_react.default.createElement(LocationHandler, null)
-    }, /*#__PURE__*/_react.default.createElement(LocationHandler, null), ({
+    const Root = () => _react.default.createElement(_router.Location, null, locationContext => _react.default.createElement(LocationHandler, locationContext));
+
+    const WrappedRoot = (0, _apiRunnerBrowser.apiRunner)(`wrapRootElement`, {
+      element: _react.default.createElement(Root, null)
+    }, _react.default.createElement(Root, null), ({
       result
     }) => {
       return {
@@ -150,11 +126,11 @@ window.___loader = _loader.publicLoader;
       };
     }).pop();
 
-    const App = () => /*#__PURE__*/_react.default.createElement(GatsbyRoot, null, SiteRoot);
+    let NewRoot = () => WrappedRoot;
 
     const renderer = (0, _apiRunnerBrowser.apiRunner)(`replaceHydrateFunction`, undefined, _reactDom.default.hydrate)[0];
     (0, _domready.default)(() => {
-      renderer( /*#__PURE__*/_react.default.createElement(App, null), typeof window !== `undefined` ? document.getElementById(`___gatsby`) : void 0, () => {
+      renderer(_react.default.createElement(NewRoot, null), typeof window !== `undefined` ? document.getElementById(`___gatsby`) : void 0, () => {
         (0, _apiRunnerBrowser.apiRunner)(`onInitialClientRender`);
       });
     });

@@ -1,140 +1,32 @@
 {
   "stages": {
     "develop": {
-      "plugins": [
-        {
-          "name": "babel-plugin-lodash",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-optional-chaining\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-nullish-coalescing-operator\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-numeric-separator\\lib\\index.js",
-          "options": {}
-        }
-      ],
-      "presets": [
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\preset-typescript\\lib\\index.js",
-          "options": {
-            "plugins": [],
-            "allExtensions": false,
-            "isTSX": false,
-            "jsxPragma": "React"
-          }
-        }
-      ],
+      "plugins": [],
+      "presets": [],
       "options": {
         "cacheDirectory": true,
         "sourceType": "unambiguous"
       }
     },
     "develop-html": {
-      "plugins": [
-        {
-          "name": "babel-plugin-lodash",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-optional-chaining\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-nullish-coalescing-operator\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-numeric-separator\\lib\\index.js",
-          "options": {}
-        }
-      ],
-      "presets": [
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\preset-typescript\\lib\\index.js",
-          "options": {
-            "plugins": [],
-            "allExtensions": false,
-            "isTSX": false,
-            "jsxPragma": "React"
-          }
-        }
-      ],
+      "plugins": [],
+      "presets": [],
       "options": {
         "cacheDirectory": true,
         "sourceType": "unambiguous"
       }
     },
     "build-html": {
-      "plugins": [
-        {
-          "name": "babel-plugin-lodash",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-optional-chaining\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-nullish-coalescing-operator\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-numeric-separator\\lib\\index.js",
-          "options": {}
-        }
-      ],
-      "presets": [
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\preset-typescript\\lib\\index.js",
-          "options": {
-            "plugins": [],
-            "allExtensions": false,
-            "isTSX": false,
-            "jsxPragma": "React"
-          }
-        }
-      ],
+      "plugins": [],
+      "presets": [],
       "options": {
         "cacheDirectory": true,
         "sourceType": "unambiguous"
       }
     },
     "build-javascript": {
-      "plugins": [
-        {
-          "name": "babel-plugin-lodash",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-optional-chaining\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-nullish-coalescing-operator\\lib\\index.js",
-          "options": {}
-        },
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\plugin-proposal-numeric-separator\\lib\\index.js",
-          "options": {}
-        }
-      ],
-      "presets": [
-        {
-          "name": "D:\\Documents\\TEC\\9no - AGO-DIC 20\\web\\gatsby-takeout\\node_modules\\@babel\\preset-typescript\\lib\\index.js",
-          "options": {
-            "plugins": [],
-            "allExtensions": false,
-            "isTSX": false,
-            "jsxPragma": "React"
-          }
-        }
-      ],
+      "plugins": [],
+      "presets": [],
       "options": {
         "cacheDirectory": true,
         "sourceType": "unambiguous"

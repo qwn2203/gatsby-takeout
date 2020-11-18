@@ -3,23 +3,11 @@ const fs = require(`fs`)
 const { join } = require(`path`)
 const { renderToString, renderToStaticMarkup } = require(`react-dom/server`)
 const { ServerLocation, Router, isRedirect } = require(`@reach/router`)
-const {
-  get,
-  merge,
-  isObject,
-  flatten,
-  uniqBy,
-  flattenDeep,
-  replace,
-  concat,
-  memoize,
-} = require(`lodash`)
+const { get, merge, isObject, flatten, uniqBy } = require(`lodash`)
 
-const { RouteAnnouncerProps } = require(`./route-announcer-props`)
 const apiRunner = require(`./api-runner-ssr`)
-const syncRequires = require(`$virtual/sync-requires`)
+const syncRequires = require(`./sync-requires`)
 const { version: gatsbyVersion } = require(`gatsby/package.json`)
-const { grabMatchParams } = require(`./find-path`)
 
 const stats = JSON.parse(
   fs.readFileSync(`${process.cwd()}/public/webpack.stats.json`, `utf-8`)
@@ -62,40 +50,10 @@ const getPageDataUrl = pagePath => {
   return `${__PATH_PREFIX__}/${pageDataPath}`
 }
 
-const getStaticQueryUrl = hash =>
-  `${__PATH_PREFIX__}/page-data/sq/d/${hash}.json`
-
-const getPageData = pagePath => {
+const getPageDataFile = pagePath => {
   const pageDataPath = getPageDataPath(pagePath)
-  const absolutePageDataPath = join(process.cwd(), `public`, pageDataPath)
-  const pageDataRaw = fs.readFileSync(absolutePageDataPath)
-
-  try {
-    return JSON.parse(pageDataRaw.toString())
-  } catch (err) {
-    return null
-  }
+  return join(process.cwd(), `public`, pageDataPath)
 }
-
-const appDataPath = join(`page-data`, `app-data.json`)
-
-const getAppDataUrl = memoize(() => {
-  let appData
-
-  try {
-    const absoluteAppDataPath = join(process.cwd(), `public`, appDataPath)
-    const appDataRaw = fs.readFileSync(absoluteAppDataPath)
-    appData = JSON.parse(appDataRaw.toString())
-
-    if (!appData) {
-      return null
-    }
-  } catch (err) {
-    return null
-  }
-
-  return `${__PATH_PREFIX__}/${appDataPath}`
-})
 
 const loadPageDataSync = pagePath => {
   const pageDataPath = getPageDataPath(pagePath)
@@ -111,26 +69,10 @@ const loadPageDataSync = pagePath => {
 
 const createElement = React.createElement
 
-export const sanitizeComponents = components => {
-  const componentsArray = ensureArray(components)
-  return componentsArray.map(component => {
-    // Ensure manifest is always loaded from content server
-    // And not asset server when an assetPrefix is used
-    if (__ASSET_PREFIX__ && component.props.rel === `manifest`) {
-      return React.cloneElement(component, {
-        href: replace(component.props.href, __ASSET_PREFIX__, ``),
-      })
-    }
-    return component
-  })
-}
-
-const ensureArray = components => {
+const sanitizeComponents = components => {
   if (Array.isArray(components)) {
-    // remove falsy items and flatten
-    return flattenDeep(
-      components.filter(val => (Array.isArray(val) ? val.length > 0 : val))
-    )
+    // remove falsy items
+    return components.filter(val => (Array.isArray(val) ? val.length > 0 : val))
   } else {
     // we also accept single components, so we need to handle this case as well
     return components ? [components] : []
@@ -200,24 +142,16 @@ export default (pagePath, callback) => {
     postBodyComponents = sanitizeComponents(components)
   }
 
-  const pageData = getPageData(pagePath)
+  const pageDataRaw = fs.readFileSync(getPageDataFile(pagePath))
+  const pageData = JSON.parse(pageDataRaw)
   const pageDataUrl = getPageDataUrl(pagePath)
-
-  const appDataUrl = getAppDataUrl()
-
-  const { componentChunkName, staticQueryHashes = [] } = pageData
-
-  const staticQueryUrls = staticQueryHashes.map(getStaticQueryUrl)
+  const { componentChunkName } = pageData
 
   class RouteHandler extends React.Component {
     render() {
       const props = {
         ...this.props,
         ...pageData.result,
-        params: {
-          ...grabMatchParams(this.props.location.pathname),
-          ...(pageData.result?.pageContext?.__params || {}),
-        },
         // pathContext was deprecated in v2. Renamed to pageContext
         pathContext: pageData.result ? pageData.result.pageContext : undefined,
       }
@@ -240,13 +174,17 @@ export default (pagePath, callback) => {
     }
   }
 
-  const routerElement = (
-    <ServerLocation url={`${__BASE_PATH__}${pagePath}`}>
-      <Router id="gatsby-focus-wrapper" baseuri={__BASE_PATH__}>
-        <RouteHandler path="/*" />
-      </Router>
-      <div {...RouteAnnouncerProps} />
-    </ServerLocation>
+  const routerElement = createElement(
+    ServerLocation,
+    { url: `${__BASE_PATH__}${pagePath}` },
+    createElement(
+      Router,
+      {
+        id: `gatsby-focus-wrapper`,
+        baseuri: `${__BASE_PATH__}`,
+      },
+      createElement(RouteHandler, { path: `/*` })
+    )
   )
 
   const bodyComponent = apiRunner(
@@ -288,7 +226,7 @@ export default (pagePath, callback) => {
       const fetchKey = `assetsByChunkName[${s}]`
 
       let chunks = get(stats, fetchKey)
-      const namedChunkGroups = get(stats, `namedChunkGroups`)
+      let namedChunkGroups = get(stats, `namedChunkGroups`)
 
       if (!chunks) {
         return null
@@ -307,7 +245,7 @@ export default (pagePath, callback) => {
 
       const childAssets = namedChunkGroups[s].childAssets
       for (const rel in childAssets) {
-        chunks = concat(
+        chunks = merge(
           chunks,
           childAssets[rel].map(chunk => {
             return { rel, name: chunk }
@@ -367,30 +305,7 @@ export default (pagePath, callback) => {
         rel="preload"
         key={pageDataUrl}
         href={pageDataUrl}
-        crossOrigin="anonymous"
-      />
-    )
-  }
-  staticQueryUrls.forEach(staticQueryUrl =>
-    headComponents.push(
-      <link
-        as="fetch"
-        rel="preload"
-        key={staticQueryUrl}
-        href={staticQueryUrl}
-        crossOrigin="anonymous"
-      />
-    )
-  )
-
-  if (appDataUrl) {
-    headComponents.push(
-      <link
-        as="fetch"
-        rel="preload"
-        key={appDataUrl}
-        href={appDataUrl}
-        crossOrigin="anonymous"
+        crossOrigin="use-credentials"
       />
     )
   }
@@ -426,8 +341,10 @@ export default (pagePath, callback) => {
       }
     })
 
+  const webpackCompilationHash = pageData.webpackCompilationHash
+
   // Add page metadata for the current page
-  const windowPageData = `/*<![CDATA[*/window.pagePath="${pagePath}";/*]]>*/`
+  const windowPageData = `/*<![CDATA[*/window.pagePath="${pagePath}";window.webpackCompilationHash="${webpackCompilationHash}";/*]]>*/`
 
   postBodyComponents.push(
     <script
@@ -454,29 +371,17 @@ export default (pagePath, callback) => {
     />
   )
 
-  let bodyScripts = []
-  if (chunkMapping[`polyfill`]) {
-    chunkMapping[`polyfill`].forEach(script => {
-      const scriptPath = `${__PATH_PREFIX__}${script}`
-      bodyScripts.push(
-        <script key={scriptPath} src={scriptPath} noModule={true} />
-      )
-    })
-  }
-
   // Filter out prefetched bundles as adding them as a script tag
   // would force high priority fetching.
-  bodyScripts = bodyScripts.concat(
-    scripts
-      .filter(s => s.rel !== `prefetch`)
-      .map(s => {
-        const scriptPath = `${__PATH_PREFIX__}/${JSON.stringify(s.name).slice(
-          1,
-          -1
-        )}`
-        return <script key={scriptPath} src={scriptPath} async />
-      })
-  )
+  const bodyScripts = scripts
+    .filter(s => s.rel !== `prefetch`)
+    .map(s => {
+      const scriptPath = `${__PATH_PREFIX__}/${JSON.stringify(s.name).slice(
+        1,
+        -1
+      )}`
+      return <script key={scriptPath} src={scriptPath} async />
+    })
 
   postBodyComponents.push(...bodyScripts)
 

@@ -1,4 +1,4 @@
-const support = function (feature) {
+const support = function(feature) {
   if (typeof document === `undefined`) {
     return false
   }
@@ -13,7 +13,7 @@ const support = function (feature) {
   return false
 }
 
-const linkPrefetchStrategy = function (url, options) {
+const linkPrefetchStrategy = function(url) {
   return new Promise((resolve, reject) => {
     if (typeof document === `undefined`) {
       reject()
@@ -23,10 +23,6 @@ const linkPrefetchStrategy = function (url, options) {
     const link = document.createElement(`link`)
     link.setAttribute(`rel`, `prefetch`)
     link.setAttribute(`href`, url)
-
-    Object.keys(options).forEach(key => {
-      link.setAttribute(key, options[key])
-    })
 
     link.onload = resolve
     link.onerror = reject
@@ -38,10 +34,11 @@ const linkPrefetchStrategy = function (url, options) {
   })
 }
 
-const xhrPrefetchStrategy = function (url) {
+const xhrPrefetchStrategy = function(url) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
     req.open(`GET`, url, true)
+    req.withCredentials = true
 
     req.onload = () => {
       if (req.status === 200) {
@@ -61,14 +58,14 @@ const supportedPrefetchStrategy = support(`prefetch`)
 
 const preFetched = {}
 
-const prefetch = function (url, options) {
+const prefetch = function(url) {
   return new Promise(resolve => {
     if (preFetched[url]) {
       resolve()
       return
     }
 
-    supportedPrefetchStrategy(url, options)
+    supportedPrefetchStrategy(url)
       .then(() => {
         resolve()
         preFetched[url] = true

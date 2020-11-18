@@ -9,17 +9,12 @@ import {
 } from "./navigation"
 import { apiRunner } from "./api-runner-browser"
 import loader from "./loader"
-import { PageQueryStore, StaticQueryStore } from "./query-result-store"
+import JSONStore from "./json-store"
 import EnsureResources from "./ensure-resources"
 
 import { reportError, clearError } from "./error-overlay-handler"
 
-// TODO: Remove entire block when we make fast-refresh the default
-// In fast-refresh, this logic is all moved into the `error-overlay-handler`
-if (
-  window.__webpack_hot_middleware_reporter__ !== undefined &&
-  process.env.GATSBY_HOT_LOADER !== `fast-refresh`
-) {
+if (window.__webpack_hot_middleware_reporter__ !== undefined) {
   const overlayErrorID = `webpack`
   // Report build errors
   window.__webpack_hot_middleware_reporter__.useCustomOverlay({
@@ -53,13 +48,13 @@ const RouteHandler = props => (
       basepath: `/`,
     }}
   >
-    <PageQueryStore {...props} />
+    <JSONStore {...props} />
   </BaseContext.Provider>
 )
 
 class LocationHandler extends React.Component {
   render() {
-    const { location } = this.props
+    let { location } = this.props
 
     if (!loader.isPageNotFound(location.pathname)) {
       return (
@@ -96,7 +91,7 @@ class LocationHandler extends React.Component {
     let custom404
     if (real404PageResources) {
       custom404 = (
-        <PageQueryStore {...this.props} pageResources={real404PageResources} />
+        <JSONStore {...this.props} pageResources={real404PageResources} />
       )
     }
 
@@ -135,4 +130,4 @@ const WrappedRoot = apiRunner(
   }
 ).pop()
 
-export default () => <StaticQueryStore>{WrappedRoot}</StaticQueryStore>
+export default () => WrappedRoot

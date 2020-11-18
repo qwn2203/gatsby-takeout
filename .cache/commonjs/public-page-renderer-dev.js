@@ -11,14 +11,14 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _loader = _interopRequireDefault(require("./loader"));
 
-var _queryResultStore = require("./query-result-store");
+var _jsonStore = _interopRequireDefault(require("./json-store"));
 
 const DevPageRenderer = ({
   location
 }) => {
   const pageResources = _loader.default.loadPageSync(location.pathname);
 
-  return /*#__PURE__*/_react.default.createElement(_queryResultStore.PageQueryStore, {
+  return _react.default.createElement(_jsonStore.default, {
     location,
     pageResources
   });
