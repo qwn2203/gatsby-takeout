@@ -5,7 +5,7 @@ import React from "react"
 const Header = ({ siteTitle }) => (
   <header
     style={{
-      background: `#5b6c5d`,
+      background: `black`,
       marginBottom: `0`,
     }}
   >
@@ -24,7 +24,7 @@ const Header = ({ siteTitle }) => (
             textDecoration: `none`,
           }}
         >
-          Simple Leaflet Map in Gatsby
+          Google Takeout
         </Link>
       </h1>
     </div>
