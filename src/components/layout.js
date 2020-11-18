@@ -37,7 +37,7 @@ const Layout = ({ children }) => (
             padding: `0.5px 1rem`,
             color: `#5b6c5d`,
             }}>
-            © {new Date().getFullYear()} <a href="https://www.andrewl.net">Andrew Larcombe</a>, built with
+            © {new Date().getFullYear()}, built with
             {` `}
             <a href="https://www.gatsbyjs.org">Gatsby</a>
           </footer>

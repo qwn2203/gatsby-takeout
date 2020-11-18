@@ -32,7 +32,7 @@ npm manifest:
     "private": true,
     "description": "Simple Leaflet Map",
     "version": "0.1.0",
-    "author": "Andrew Larcombe <andrew@andrewl.net>",
+    "author": "Alma Ayaquica",
     "dependencies": {
       "gatsby": "^2.13.55",
       "gatsby-plugin-manifest": "^2.2.5",
