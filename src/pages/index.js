@@ -11,8 +11,8 @@ const IndexPage = () => (
 
     {typeof window !== 'undefined' &&
         <LeafletMap
-          position={[52,-0.5]}
-          zoom={8}
+          position={[19.4978,-99.1269]}
+          zoom={5}
           markerText={"Hello, this is a marker"}
         />
     }
