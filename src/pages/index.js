@@ -1,6 +1,7 @@
 import React from "react"
 import Layout from "../components/layout"
 import LeafletMap from "../components/leafletmap"
+import { DatePicker } from "@material-ui/pickers";
 
 const IndexPage = () => (
   <Layout>
