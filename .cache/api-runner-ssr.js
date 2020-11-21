@@ -1,5 +1,5 @@
 var plugins = [{
-      plugin: require('D:/Documents/TEC/9no - AGO-DIC 20/web/FINAL/gatsby-takeout/node_modules/gatsby-plugin-react-leaflet/gatsby-ssr'),
+      plugin: require('/Users/belindapastranagutierrez/Documents/tabaTemporal/LaboWeb/gatsby-takeout/node_modules/gatsby-plugin-react-leaflet/gatsby-ssr'),
       options: {"plugins":[]},
     }]
 // During bootstrap, we write requires at top of this file which looks like:

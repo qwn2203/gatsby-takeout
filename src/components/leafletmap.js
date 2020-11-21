@@ -15,37 +15,47 @@ class LeafletMap extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      latitud: [],
-      longitud: [],
+      latlon: [],
       time: [],
-      activity: []
+      activ: []
     };
   }
   
 
   componentDidMount(){
     var latlon = [];
-    var utcSeconds = 1234567890;
-    //var time = [];
-    //var activ = [];
-    for(var i = 0; i<10; i++){
+    var time = [];
+    var activ = [];
+    for(var i = 0; i < 30; i++){
       var lati=data.locations[i].latitudeE7/10000000;
       var lon=data.locations[i].longitudeE7/10000000;
-      var dat =data.locations[i].timestampMs;
+      //var dat =new Date(data.locations[i].timestampMs);
       if(data.locations[i].activity != null){
-        var act=data.locations[i].activity[0];
+        var act=data.locations[i].activity[0].activity[0].type;
       }else{
         act = 'null';
       }
-      
-      latlon.push([lati,lon]);
+      var date = new Date(+data.locations[i].timestampMs);
+      var formatDate = ("0" + date.getDate()).slice(-2) + '-' + ("0" + (date.getMonth()+1)).slice(-2) + '-' + date.getFullYear()
 
+      latlon.push([lati,lon]);
+      activ.push(act);
+      time.push(formatDate);
       //var d = new Date(dat);
       //var date = d.setUTCSeconds(utcSeconds);
-      console.log(act);
+      this.setState({
+        latlon: latlon,
+        activ: activ,
+        time: time
+      });
     }
-    //console.log(latlon);
+    console.log("hola");
+    console.log(this.state.latlon);
+    console.log(latlon);
+    console.log(time);
+    console.log(activ);
   }
+
   static propTypes = {
     /** Latitude and Longitude of the map centre in an array, eg [51, -1] **/
     position: PropTypes.array,
