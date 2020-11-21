@@ -24,17 +24,27 @@ class LeafletMap extends React.Component {
   
 
   componentDidMount(){
-    var lat = [];
-    //var long = [];
+    var latlon = [];
+    var utcSeconds = 1234567890;
     //var time = [];
     //var activ = [];
-    //console.log(data.locations[0].latitudeE7);
     for(var i = 0; i<10; i++){
       var lati=data.locations[i].latitudeE7/10000000;
-      console.log(lati);
-      //lat.push(data.locations[i].latitudE7);
+      var lon=data.locations[i].longitudeE7/10000000;
+      var dat =data.locations[i].timestampMs;
+      if(data.locations[i].activity != null){
+        var act=data.locations[i].activity[0];
+      }else{
+        act = 'null';
+      }
+      
+      latlon.push([lati,lon]);
+
+      //var d = new Date(dat);
+      //var date = d.setUTCSeconds(utcSeconds);
+      console.log(act);
     }
-    //console.log(lat);
+    //console.log(latlon);
   }
   static propTypes = {
     /** Latitude and Longitude of the map centre in an array, eg [51, -1] **/
