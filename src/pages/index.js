@@ -73,7 +73,6 @@ export default function IndexPage(){
         <LeafletMap
           position={[19.4978,-99.1269]}
           zoom={5}
-          markerText={"Hello, this is a marker"}
         />
     }
 
