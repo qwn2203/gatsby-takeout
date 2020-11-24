@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+
 const polyline = [
   [19.04334, -98.20193],
   [19.4978,-99.1269],
@@ -93,19 +94,21 @@ class LeafletMap extends React.Component {
     } = this.state;
       return (
         <div>
-          <FormControl >
-            <InputLabel id="demo-simple-select-label" >Movimiento</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              //onChange={handleChange}
-            >
-              <MenuItem  value={'still'}>Still</MenuItem>
-              <MenuItem  value={'tilt'}>Tilting</MenuItem>
-              <MenuItem  value={'unkn'}>Unknown</MenuItem>
-              <MenuItem  value={'foot'}>On foot</MenuItem>
-            </Select>
-          </FormControl>
+          <div class="center" >
+            <FormControl >
+              <InputLabel id="demo-simple-select-label">Movimiento</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                //onChange={handleChange}
+              >
+                <MenuItem key={'still'}>Still</MenuItem>
+                <MenuItem key={'tilt'}>Tilting</MenuItem>
+                <MenuItem key={'unkn'}>Unknown</MenuItem>
+                <MenuItem key={'foot'}>On foot</MenuItem>
+              </Select>
+            </FormControl>
+        </div>
 
         <Map center={this.props.position} zoom={this.props.zoom}>
           <TileLayer
@@ -122,9 +125,6 @@ class LeafletMap extends React.Component {
             color={limeOptions} 
             positions={latlon} />
         </Map>
-        <button onClick={
-          console.log(latlon)
-        }>hola</button>
         </div>
       );
   }

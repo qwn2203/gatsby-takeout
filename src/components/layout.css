@@ -8,6 +8,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+}
 article,
 aside,
 details,
