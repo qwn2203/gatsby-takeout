@@ -3,19 +3,12 @@ import PropTypes from 'prop-types'
 import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import './leafletmap.css'
 import data from './LocHist.json'
-import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-
-const polyline = [
-  [19.04334, -98.20193],
-  [19.4978,-99.1269],
-  [19.18095, -96.1429],
-]
-const limeOptions = 'lime'
+const colorOptions = 'lime'
 
 class LeafletMap extends React.Component {
   constructor(props){
@@ -32,9 +25,12 @@ class LeafletMap extends React.Component {
     };
   }
   
-
   componentDidMount(){
     var latlon = [];
+    var latLonStill = [];
+    var latLonTilt = [];
+    var latLonFoot = [];
+    var latLonUnk = [];
     var time = [];
     var activ = [];
     for(var i = 0; i < 20000; i++){
@@ -42,8 +38,21 @@ class LeafletMap extends React.Component {
       var lon=data.locations[i].longitudeE7/10000000;
       //var dat =new Date(data.locations[i].timestampMs);
       if(data.locations[i].activity != null){
+        if(data.locations[i].activity[0].activity[0].type === 'STILL'){
+          latLonStill.push([lati,lon]);
+        } 
+        if(data.locations[i].activity[0].activity[0].type === 'TILTING'){
+          latLonTilt.push([lati,lon]);
+        }
+        if(data.locations[i].activity[0].activity[0].type === 'ON FOOT'){
+          latLonFoot.push([lati,lon]);
+        }
+        if(data.locations[i].activity[0].activity[0].type === 'UNKNOWN'){
+          latLonUnk.push([lati,lon]);
+        }
         var act=data.locations[i].activity[0].activity[0].type;
       }else{
+        latLonUnk.push([lati,lon]);
         act = 'null';
       }
       var date = new Date(+data.locations[i].timestampMs);
@@ -56,6 +65,10 @@ class LeafletMap extends React.Component {
       //var date = d.setUTCSeconds(utcSeconds);
       this.setState({
         latlon: latlon,
+        latLonStill: latLonStill,
+        latLonTilt: latLonTilt,
+        latLonFoot: latLonFoot,
+        latLonUnk: latLonUnk,
         activ: activ,
         time: time
       });
@@ -88,10 +101,25 @@ class LeafletMap extends React.Component {
   render() {
     const {
       latlon,
+      latLonStill,
+      latLonTilt,
+      latLonFoot,
+      latLonUnk,
       time,
       activ,
       movement
     } = this.state;
+
+    const handleChange = (event) => {
+      if(event.target.value === 'still'){
+        this.setState({
+          latlon: latLonStill
+        });
+      }
+      console.log("holis");
+      console.log(event.target.value);
+    };
+
       return (
         <div>
           <div class="center" >
@@ -100,12 +128,12 @@ class LeafletMap extends React.Component {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                //onChange={handleChange}
+                onChange={handleChange}
               >
-                <MenuItem key={'still'}>Still</MenuItem>
-                <MenuItem key={'tilt'}>Tilting</MenuItem>
-                <MenuItem key={'unkn'}>Unknown</MenuItem>
-                <MenuItem key={'foot'}>On foot</MenuItem>
+                <MenuItem value={'still'}>Still</MenuItem>
+                <MenuItem value={'tilt'}>Tilting</MenuItem>
+                <MenuItem value={'unkn'}>Unknown</MenuItem>
+                <MenuItem value={'foot'}>On foot</MenuItem>
               </Select>
             </FormControl>
         </div>
@@ -121,8 +149,7 @@ class LeafletMap extends React.Component {
           </Marker>
           }
           <Polyline 
-            pathOptions={limeOptions} 
-            color={limeOptions} 
+            color={colorOptions} 
             positions={latlon} />
         </Map>
         </div>
