@@ -14,13 +14,17 @@ const polyline = [
   [19.4978,-99.1269],
   [19.18095, -96.1429],
 ]
-const limeOptions = { color: 'lime' }
+const limeOptions = 'lime'
 
 class LeafletMap extends React.Component {
   constructor(props){
     super(props);
     this.state={
       latlon: [],
+      latLonStill: [],
+      latLonTilt: [],
+      latLonFoot: [],
+      latLonUnk: [],
       time: [],
       activ: [],
       movement: ''
@@ -90,16 +94,16 @@ class LeafletMap extends React.Component {
       return (
         <div>
           <FormControl >
-            <InputLabel id="demo-simple-select-label">Movimiento</InputLabel>
+            <InputLabel id="demo-simple-select-label" >Movimiento</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               //onChange={handleChange}
             >
-              <MenuItem key={'still'}>Still</MenuItem>
-              <MenuItem key={'tilt'}>Tilting</MenuItem>
-              <MenuItem key={'unkn'}>Unknown</MenuItem>
-              <MenuItem key={'foot'}>On foot</MenuItem>
+              <MenuItem  value={'still'}>Still</MenuItem>
+              <MenuItem  value={'tilt'}>Tilting</MenuItem>
+              <MenuItem  value={'unkn'}>Unknown</MenuItem>
+              <MenuItem  value={'foot'}>On foot</MenuItem>
             </Select>
           </FormControl>
 
@@ -115,7 +119,7 @@ class LeafletMap extends React.Component {
           }
           <Polyline 
             pathOptions={limeOptions} 
-            color={'lime'} 
+            color={limeOptions} 
             positions={latlon} />
         </Map>
         <button onClick={
