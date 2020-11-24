@@ -27,55 +27,12 @@ export default function IndexPage(){
 
   return (
   <Layout>
-    <section style={{ "margin": "0.5rem 1rem" }}>
-    <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-    </section>
-
     {typeof window !== 'undefined' &&
         <LeafletMap
           position={[19.4978,-99.1269]}
           zoom={5}
         />
     }
-
   </Layout>
   )
 }
