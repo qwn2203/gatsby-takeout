@@ -109,14 +109,37 @@ class LeafletMap extends React.Component {
       activ,
       movement
     } = this.state;
-
+  
     const handleChange = (event) => {
-      if(event.target.value === 'still'){
-        this.setState({
-          latlon: latLonStill
-        });
+      switch (event.target.value) {
+        case 'still':
+          this.setState({
+            latlon: latLonStill
+          });
+          break;
+        case 'tilt':
+          this.setState({
+            latlon: latLonTilt
+          });
+          break;
+        case 'unkn':
+          this.setState({
+            latlon: latLonUnk
+          });
+          break;
+        case 'foot':
+          this.setState({
+            latlon: latLonFoot
+          });
+          break;
+        case 'all':
+            this.setState({
+              latlon: latlon
+            });
+            break;
+        default:
+          break;
       }
-      console.log("holis");
       console.log(event.target.value);
     };
 
@@ -129,7 +152,8 @@ class LeafletMap extends React.Component {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 onChange={handleChange}
-              >
+              > 
+                <MenuItem value={'all'}><em>All</em></MenuItem>
                 <MenuItem value={'still'}>Still</MenuItem>
                 <MenuItem value={'tilt'}>Tilting</MenuItem>
                 <MenuItem value={'unkn'}>Unknown</MenuItem>
