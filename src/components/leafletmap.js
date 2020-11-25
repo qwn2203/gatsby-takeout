@@ -15,13 +15,14 @@ class LeafletMap extends React.Component {
     super(props);
     this.state={
       latlon: [],
+      latlonGlobal: [],
       latLonStill: [],
       latLonTilt: [],
       latLonFoot: [],
       latLonUnk: [],
       time: [],
       activ: [],
-      movement: ''
+      pathColor: 'gray'
     };
   }
   
@@ -37,21 +38,26 @@ class LeafletMap extends React.Component {
       var lati=data.locations[i].latitudeE7/10000000;
       var lon=data.locations[i].longitudeE7/10000000;
       //var dat =new Date(data.locations[i].timestampMs);
+
       if(data.locations[i].activity != null){
-        if(data.locations[i].activity[0].activity[0].type === 'STILL'){
-          latLonStill.push([lati,lon]);
-        } 
-        if(data.locations[i].activity[0].activity[0].type === 'TILTING'){
-          latLonTilt.push([lati,lon]);
-        }
-        if(data.locations[i].activity[0].activity[0].type === 'ON FOOT'){
-          latLonFoot.push([lati,lon]);
-        }
-        if(data.locations[i].activity[0].activity[0].type === 'UNKNOWN'){
-          latLonUnk.push([lati,lon]);
+        switch (data.locations[i].activity[0].activity[0].type) {
+          case 'STILL':
+            latLonStill.push([lati,lon]);
+          break;
+          case 'TILTING':
+            latLonTilt.push([lati,lon]);
+          break;
+          case 'ON_FOOT':
+            latLonFoot.push([lati,lon]);
+          break;
+          case 'UNKNOWN':
+            latLonUnk.push([lati,lon]);
+          break;
+          default:
+          break;
         }
         var act=data.locations[i].activity[0].activity[0].type;
-      }else{
+      } else {
         latLonUnk.push([lati,lon]);
         act = 'null';
       }
@@ -65,6 +71,7 @@ class LeafletMap extends React.Component {
       //var date = d.setUTCSeconds(utcSeconds);
       this.setState({
         latlon: latlon,
+        latlonGlobal: latlon,
         latLonStill: latLonStill,
         latLonTilt: latLonTilt,
         latLonFoot: latLonFoot,
@@ -101,40 +108,46 @@ class LeafletMap extends React.Component {
   render() {
     const {
       latlon,
+      latlonGlobal,
       latLonStill,
       latLonTilt,
       latLonFoot,
       latLonUnk,
+      pathColor,
       time,
-      activ,
-      movement
+      activ
     } = this.state;
   
     const handleChange = (event) => {
       switch (event.target.value) {
         case 'still':
           this.setState({
-            latlon: latLonStill
+            latlon: latLonStill,
+            pathColor: 'red'
           });
           break;
         case 'tilt':
           this.setState({
-            latlon: latLonTilt
+            latlon: latLonTilt,
+            pathColor: 'green'
           });
           break;
         case 'unkn':
           this.setState({
-            latlon: latLonUnk
+            latlon: latLonUnk,
+            pathColor: 'black'
           });
           break;
         case 'foot':
           this.setState({
-            latlon: latLonFoot
+            latlon: latLonFoot,
+            pathColor: 'orange'
           });
           break;
         case 'all':
             this.setState({
-              latlon: latlon
+              latlon: latlonGlobal,
+              pathColor: 'gray'
             });
             break;
         default:
@@ -173,7 +186,7 @@ class LeafletMap extends React.Component {
           </Marker>
           }
           <Polyline 
-            color={colorOptions} 
+            color={pathColor} 
             positions={latlon} />
         </Map>
         </div>
