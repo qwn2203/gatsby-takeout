@@ -141,7 +141,7 @@ class LeafletMap extends React.Component {
         case 'foot':
           this.setState({
             latlon: latLonFoot,
-            pathColor: 'orange'
+            pathColor: 'blue'
           });
           break;
         case 'all':
